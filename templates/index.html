@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block body %}
+<header>Messages</header>
+<table class="table table-striped">
+	<tr>
+		<td>File ID</td>
+		<td>Read / Unread</td> 
+		<td>Date</td>
+		<td>Mark as read</td>
+		<td>Transcript</td>
+	</tr>
+	{% for file in files %}
+	<tr>
+		<td class="file_id" file_id="{{file.file_id}}"><button>{{file.file_id}}</button></td>
+		<td>{{file.read}}</td> 
+		<td>{{file.date}}</td>
+		<td class="markread" file_id="{{file.file_id}}" url="{{request.url}}"><button> Mark as read </button></td>
+		<td>{{file.transcript}}</td>
+		<!-- Use url for -->
+	</tr>
+	{% endfor %}
+</table>
+
+<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+	<div id="jp_container_1" class="jp-audio" role="application" aria-label="media player">
+		<div class="jp-type-single">
+			<div class="jp-controls-holder">
+				<div class="jp-controls">
+					<button class="jp-play" role="button" tabindex="0">play</button>
+					<button class="jp-stop" role="button" tabindex="0">stop</button>
+					</div>
+					<div class="jp-progress">
+					<div class="jp-seek-bar">
+					<div class="jp-play-bar"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
