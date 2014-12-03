@@ -2,11 +2,12 @@ import MySQLdb
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 import logging
+from config import DSN
 # logging.basicConfig()
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://mpcadosch:HildeKnie@mydbinstance.cw0pqfaw7jov.us-east-1.rds.amazonaws.com/iot'
+app.config['SQLALCHEMY_DATABASE_URI'] = DSN
 db = SQLAlchemy(app)
 
 class File(db.Model):

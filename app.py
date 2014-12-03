@@ -77,8 +77,8 @@ def hello():
 
 @app.route('/transcript/<file_id>')
 def transcripts(file_id):
-	stt.get_transcripts(file_id)
-	return 'hola'
+	return stt.get_transcripts(file_id)
+	# return 'hola'
 
 
 @app.route('/uploads/<filename>')
