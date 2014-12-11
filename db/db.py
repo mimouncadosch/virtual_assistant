@@ -44,3 +44,9 @@ def mark_as_read(id, read):
 	res.read = True
 	db.session.commit()
 	return True
+
+def mark_as_unread(id, read):
+	res = File.query.filter_by(file_id=id).first()
+	res.read = False
+	db.session.commit()
+	return True

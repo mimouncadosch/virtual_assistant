@@ -1,21 +1,42 @@
 {% extends "layout.html" %}
 {% block body %}
-<header>Messages</header>
-<table class="table table-striped">
-	<tr>
-		<td>File ID</td>
-		<td>Read / Unread</td> 
-		<td>Date</td>
+
+
+<!-- <div class="jumbotron">
+  <h1>Web Audio API</h1>
+  <p>Audio Interface for the Internet of Things</p>
+  <p><a class="btn btn-primary btn-lg" href="https://github.com/mimouncadosch/virtual_assistant" target="_blank" role="button">Learn more</a></p>
+</div> -->
+
+<div class="page-header">
+  <h1>Your Messages <small>{{num_unread}} unread message(s)</small></h1>
+</div>
+<table class="table">
+	<tr class="info table-head">
+		<td>Text</td>
+		<td>Audio</td>
+		<!-- <td>Read / Unread</td>  -->
 		<td>Mark as read</td>
-		<td>Transcript</td>
+		<td>Date</td>
+		<td>File ID</td>
 	</tr>
-	{% for file in files %}
+	
+	{% for file in files|sort(attribute='read') %}
+	{% if file.read == False %}
+	<tr class="warning">
+	{% elif file.read == True %}
 	<tr>
-		<td class="file_id" file_id="{{file.file_id}}"><button>{{file.file_id}}</button></td>
-		<td>{{file.read}}</td> 
+	{% endif %}
+		<td>{{file.transcript[0]}}</td>
+		<td class="file_id" file_id="{{file.file_id}}"><button  type="button" class="btn btn-success">Play</button></td>
+		{% if file.read == False %}
+		<td class="markread" file_id="{{file.file_id}}" url="{{request.url}}"> <button type="button" class="btn btn-danger"> Mark as Read </td>
+		{% elif file.read == True %}
+		<td class="markunread" file_id="{{file.file_id}}" url="{{request.url}}"><button type="button" class="btn btn-info"> Mark as Unread</td>
+		{% endif %}
 		<td>{{file.date}}</td>
-		<td class="markread" file_id="{{file.file_id}}" url="{{request.url}}"><button> Mark as read </button></td>
-		<td>{{file.transcript}}</td>
+		<td>{{file.file_id}}</td>
+		
 		<!-- Use url for -->
 	</tr>
 	{% endfor %}

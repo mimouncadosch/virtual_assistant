@@ -1,0 +1,11 @@
+.table-head {
+	font-weight: bold;
+}
+
+.read-True {
+	color: #0099FF;
+}
+
+.read-False {
+	color: #FA0000;
+}

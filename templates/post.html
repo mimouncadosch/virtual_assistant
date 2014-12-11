@@ -1,6 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
-<header>Leave a message:</header>
-<textarea id="msg" class="form-control" rows="3"></textarea>
-<button>Post</button>
+<div class="page-header">
+	<h1>Leave a Message </h1>
+</div>
+<textarea id="msg" class="form-control" rows="3" url="{{url}}"></textarea>
+<hr>
+<form action="" method=post>
+<button type="button" class="btn btn-lg btn-success" id="post_msg">POST</button>	
+</input>
+</form>
+
+<script type="text/javascript" src="js/sha1.js"></script>
+<script type="text/javascript" src="js/post.js"></script>
 {% endblock %}

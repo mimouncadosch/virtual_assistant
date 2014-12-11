@@ -21,6 +21,8 @@ def transcribe(file_id):
 		print("Invalid API key or quota maxed out")
 	except LookupError:                                 # speech is unintelligible
 		print("Could not understand audio")
+		with open(os.path.join(TRANSCRIPTS, file_id), "a") as myfile:
+			myfile.write("Could not understand audio")
 
 
 def get_transcripts(file_id):

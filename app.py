@@ -1,9 +1,11 @@
 import os
 from flask import Flask, request, jsonify, render_template, redirect, url_for, send_from_directory
-
+from datetime import datetime
 from werkzeug import secure_filename
 from db import db
 from stt import stt
+from tts import tts
+
 # Config
 app = Flask(__name__, static_folder='static', static_url_path='')
 
@@ -21,7 +23,7 @@ def upload_file():
 	if request.method == 'POST':
 		file_id = request.form['id']
 		file_date = request.form['date']
-		file =  request.files['audio_input.wav']
+		file = request.files['audio_input.wav']
 		if file:
 			filename = secure_filename(file_id)
 			data_folder = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -53,27 +55,52 @@ def get_unread_messages():
 def record():
 	return render_template('record.html')
 
-@app.route('/post', methods=['GET'])
+@app.route('/post', methods=['GET', 'POST'])
 def post():
-	return render_template('post.html')
+	# POST request
+	if request.method == 'POST':
+		data = request.json['text']
+		file_id = tts.get_speech(data)
+		if file_id is False:
+			return "We are sorry, but we were unable to synthesize the text you submitted"
+		db.save_metadata(file_id, datetime.utcnow(), False)
+		# return render_template('index.html')
+		return "Message successfully processed"
+	# GET request
+	else:
+		return render_template('post.html', url=request.url)
 
-# @app.route('/markread/<file_id>', methods=['POST'])
 @app.route('/markread/<file_id>', methods=['POST'])
 def mark_as_read(file_id):
 	read = request.json['read']
 	db.mark_as_read(file_id, read)
 	return 'marked', file_id, ' as read'
-	# return "hello markread"
+
+@app.route('/markunread/<file_id>', methods=['POST'])
+def mark_as_unread(file_id):
+	read = request.json['read']
+	db.mark_as_unread(file_id, read)
+	return 'marked', file_id, ' as unread'
+
+# @app.route('/tts')
+# def text_to_speech():
+# 	res = tts.get_speech('I love Danielle Haim')
+# 	if res is False:
+# 		return "We are sorry, but we were unable to synthesize the text you submitted"
+# 	return res
 
 # Client endpoints - Output
 @app.route('/')
 def hello():
 	files = db.get_files()
 	transcripts = dict()
+	num_unread = 0
 	for file in files:
 		file.transcript = stt.get_transcripts(file.file_id)[0]
-
-	return render_template('index.html', files=files, url=request.url) 
+		if file.read is False: 
+			num_unread += 1
+	
+	return render_template('index.html', files=files, url=request.url, num_unread=num_unread) 
 
 @app.route('/transcript/<file_id>')
 def transcripts(file_id):
